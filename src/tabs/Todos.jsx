@@ -11,23 +11,32 @@ const parseDataFromLS = (key, initialValue = []) => {
 };
 export const Todos = () => {
   const [todos, setTodos] = useState(() => parseDataFromLS('todos'));
-  const addTodo = todo => {
-    setTodos(p => [{ ...todo, id: nanoid(6) }, ...p]);
-  };
 
   useEffect(() => {
     localStorage.setItem('todos', JSON.stringify(todos));
   }, [todos]);
+
+  const addTodo = todo => {
+    setTodos(p => [{ ...todo, id: nanoid(6) }, ...p]);
+  };
+
+  const deleteTodo = id => {
+    setTodos(p => p.filter(todo => todo.id !== id));
+  };
 
   return (
     <>
       <SearchForm getTodo={addTodo} />
       {todos.length > 0 ? (
         <Grid>
-          {todos.map(({ id, text }) => {
+          {todos.map((todo, index) => {
             return (
-              <GridItem key={id}>
-                <Todo text={text} />
+              <GridItem key={todo.id}>
+                <Todo
+                  todo={todo}
+                  numbertoDo={index + 1}
+                  deleteTodo={deleteTodo}
+                />
               </GridItem>
             );
           })}
