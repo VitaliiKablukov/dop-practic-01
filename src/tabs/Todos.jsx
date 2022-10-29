@@ -11,6 +11,8 @@ const parseDataFromLS = (key, initialValue = []) => {
 };
 export const Todos = () => {
   const [todos, setTodos] = useState(() => parseDataFromLS('todos'));
+  const [isEditing, setIsEditing] = useState(false);
+  const [currentTodo, setCurrentTodo] = useState({});
 
   useEffect(() => {
     localStorage.setItem('todos', JSON.stringify(todos));
@@ -24,9 +26,31 @@ export const Todos = () => {
     setTodos(p => p.filter(todo => todo.id !== id));
   };
 
+  const editTodo = todoObj => {
+    setIsEditing(true);
+    setCurrentTodo(todoObj);
+  };
+  const editFormSubmit = obj => {
+    setCurrentTodo({});
+    setIsEditing(false);
+    setTodos(p => p.map(todo => (todo.id === obj.id ? obj : todo)));
+  };
+
+  const cancelEditFormSubmit = () => {
+    setCurrentTodo({});
+    setIsEditing(false);
+  };
   return (
     <>
-      <SearchForm getTodo={addTodo} />
+      {!isEditing ? (
+        <SearchForm getTodo={addTodo} />
+      ) : (
+        <EditForm
+          currentTodo={currentTodo}
+          editFormSubmit={editFormSubmit}
+          cancelEditFormSubmit={cancelEditFormSubmit}
+        />
+      )}
       {todos.length > 0 ? (
         <Grid>
           {todos.map((todo, index) => {
@@ -36,6 +60,7 @@ export const Todos = () => {
                   todo={todo}
                   numbertoDo={index + 1}
                   deleteTodo={deleteTodo}
+                  editTodo={editTodo}
                 />
               </GridItem>
             );
