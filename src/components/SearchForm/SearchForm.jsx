@@ -2,7 +2,7 @@ import { Component } from 'react';
 import { useState } from 'react';
 import { FiSearch } from 'react-icons/fi';
 import { FormBtn, InputSearch, SearchFormStyled } from './SearchForm.styled';
-import { nanoid } from 'nanoid';
+
 
 export const SearchForm = ({ getTodo }) => {
   const [query, setQuery] = useState('');
@@ -15,7 +15,6 @@ export const SearchForm = ({ getTodo }) => {
     event.preventDefault();
 
     const todo = {
-      id: nanoid(),
       text: query,
     };
 
