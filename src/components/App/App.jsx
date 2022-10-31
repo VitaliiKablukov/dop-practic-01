@@ -1,14 +1,28 @@
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import 'react-tabs/style/react-tabs.css';
 
+import { Global, ThemeProvider } from '@emotion/react';
+import { GlobalStyles } from 'styles';
+
 import { Header, Section, Container, Text } from 'components';
 import { Gallery, Todos } from 'tabs';
+import useThemeConfig from 'hooks/useThemeConfig';
 
 export const App = () => {
-  return (
-    <>
-      <Header />
+  // custom hook
+  const { theme, themeTitle, toggleTheme } = useThemeConfig();
 
+  return (
+    <ThemeProvider theme={theme}>
+      <Global styles={GlobalStyles} />
+      <Global
+        styles={{
+          body: {
+            background: theme.colors.mainBackground,
+          },
+        }}
+      />
+      <Header themeTitle={themeTitle} toggleTheme={toggleTheme} />
       <Section>
         <Container>
           <Tabs>
@@ -31,6 +45,6 @@ export const App = () => {
           </Tabs>
         </Container>
       </Section>
-    </>
+    </ThemeProvider>
   );
 };
